@@ -1,7 +1,8 @@
 import express, { response } from "express";
+import { Location } from "./types";
 const app = express();
 
-app.get("/", (req, res) => {
+app.get<{ name: string }, string, {}, Location>("/", (req, res) => {
   res.send("Hello from node and typescript.");
 });
 
