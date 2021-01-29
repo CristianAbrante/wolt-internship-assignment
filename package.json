@@ -1,0 +1,24 @@
+{
+  "name": "wolt-internship-assignment",
+  "version": "1.0.0",
+  "description": "Rest API created for the assignment of the 2021 summer internship at Wolt",
+  "main": "src/app.ts",
+  "repository": "git@github.com:CristianAbrante/wolt-internship-assignment.git",
+  "author": "Cristian Abrante <cristian@abrante.me>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --config nodemon.json src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "@types/node": "^14.14.22",
+    "nodemon": "^2.0.7",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
