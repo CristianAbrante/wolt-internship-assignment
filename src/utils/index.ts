@@ -1,8 +1,8 @@
 import {
   Restaurant,
   GeoLocation,
-  RestaurantSortingType,
-  RestaurantsSortFunctions,
+  DiscoverySortingCriteria,
+  DiscoverySortCompareFunctions,
 } from "../types";
 const geolib = require("geolib");
 
@@ -43,7 +43,8 @@ export const filterRestaurantsByDistance = (
 
 /**
  * This methods sorts the list of restaurants according to a given
- * sorting criteria.
+ * sorting criteria. It is important to say that gives more priority
+ * to the restaurants that are opened: "online: true"
  *
  * @param restaurants
  * @param referenceLocation
@@ -52,45 +53,32 @@ export const filterRestaurantsByDistance = (
 export const sortRestaurants = (
   restaurants: Restaurant[],
   referenceLocation: GeoLocation,
-  sortCriteria: RestaurantSortingType
+  sortCriteria: DiscoverySortingCriteria
 ) =>
-  [...restaurants].sort(
-    restaurantsSortFunctions[sortCriteria](referenceLocation)
-  );
+  [...restaurants].sort((a, b) => {
+    // in case a is online and b is not then a should be first
+    if (a.online && !b.online) return -1;
+    // in case b is online and be is not then b should be first
+    if (b.online && !a.online) return +1;
+
+    // in case both are open or none of them, then the sorting
+    // criteria is applied.
+    return discoverySortCompareFn[sortCriteria](a, b, { referenceLocation });
+  });
 
 /**
  * This object defines the possible sorting criteria
  * available.
  */
-const restaurantsSortFunctions: RestaurantsSortFunctions = {
-  online: (_) => (a, b) => {
-    // in case a is online and b is not then a should be first
-    if (a.online && !b.online) return -1;
-    // in case b is online and be is not then b should be first
-    if (b.online && !a.online) return +1;
-    // in case both are open or none of them, then they are equal.
-    return 0;
-  },
-  popularity: (_) => (a, b) => {
-    const onlineSort = restaurantsSortFunctions["online"](_)(a, b);
-    // if according to online they are equal then they are sorted
-    // based on popularity.
-    return onlineSort === 0 ? b.popularity - a.popularity : onlineSort;
-  },
-  date: (_) => (a, b) => {
-    const onlineSort = restaurantsSortFunctions["online"](_)(a, b);
-    // if according to online they are equal then they are sorted
-    // based on date.
-    return onlineSort === 0
-      ? new Date(b.launch_date).getTime() - new Date(a.launch_date).getTime()
-      : onlineSort;
-  },
-  location: (location) => (a, b) => {
-    const onlineSort = restaurantsSortFunctions["online"](location)(a, b);
-    // if according to online they are equal then they are sorted
-    // based on location.
-    return onlineSort === 0
-      ? getDistance(location, a) - getDistance(location, b)
-      : onlineSort;
-  },
+const discoverySortCompareFn: DiscoverySortCompareFunctions = {
+  popularity: (a, b) => b.popularity - a.popularity,
+  date: (a, b) =>
+    new Date(b.launch_date).getTime() - new Date(a.launch_date).getTime(),
+  location: (a, b, additionalParams) =>
+    // if the additional params are specified then the location is calculated
+    // or all the elements are zero otherwise.
+    additionalParams
+      ? getDistance(additionalParams.referenceLocation, a) -
+        getDistance(additionalParams.referenceLocation, b)
+      : 0,
 };
