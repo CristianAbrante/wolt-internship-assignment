@@ -54,7 +54,9 @@ export const sortRestaurants = (
   referenceLocation: GeoLocation,
   sortCriteria: RestaurantSortingType
 ) =>
-  restaurants.sort(restaurantsSortFunctions[sortCriteria](referenceLocation));
+  [...restaurants].sort(
+    restaurantsSortFunctions[sortCriteria](referenceLocation)
+  );
 
 /**
  * This object defines the possible sorting criteria
