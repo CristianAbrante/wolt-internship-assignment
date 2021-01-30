@@ -1,8 +1,8 @@
 import express, { response } from "express";
-import { Location } from "./types";
+import { GeoLocation } from "./types";
 const app = express();
 
-app.get<{ name: string }, string, {}, Location>("/", (req, res) => {
+app.get<{ name: string }, string, {}, GeoLocation>("/", (req, res) => {
   res.send("Hello from node and typescript.");
 });
 

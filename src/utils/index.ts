@@ -1,4 +1,9 @@
-import { Restaurant, GeoLocation } from "../types";
+import {
+  Restaurant,
+  GeoLocation,
+  RestaurantSortingType,
+  RestaurantsSortFunctions,
+} from "../types";
 const geolib = require("geolib");
 
 /**
@@ -35,3 +40,26 @@ export const filterRestaurantsByDistance = (
     (restaurant) =>
       getDistance(referenceLocation, restaurant) < distanceThreshold
   );
+
+/**
+ * This methods sorts the list of restaurants according to a given
+ * sorting criteria.
+ *
+ * @param restaurants
+ * @param referenceLocation
+ * @param sortCriteria
+ */
+export const sortRestaurants = (
+  restaurants: Restaurant[],
+  referenceLocation: GeoLocation,
+  sortCriteria: RestaurantSortingType
+) =>
+  restaurants.sort(restaurantsSortFunctions[sortCriteria](referenceLocation));
+
+/**
+ * This object defines the possible sorting criteria
+ * available.
+ */
+const restaurantsSortFunctions: RestaurantsSortFunctions = {
+  popularity: (_) => (a, b) => b.popularity - a.popularity,
+};
