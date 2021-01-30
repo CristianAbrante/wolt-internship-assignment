@@ -3,6 +3,8 @@ import {
   GeoLocation,
   DiscoverySortingCriteria,
   DiscoverySortCompareFunctions,
+  RestaurantsFilterFunctions,
+  RestaurantsFilterFunction,
 } from "../types";
 const geolib = require("geolib");
 
@@ -19,27 +21,8 @@ export const getDistance = (location: GeoLocation, restaurant: Restaurant) =>
   );
 
 /**
- * Default distance (in meters) to use as a filter.
+ * SORT FUNCTIONS
  */
-export const DEFAULT_DISTANCE = 1500;
-
-/**
- * Method filters the restaurant list by a given distance threshold,
- * from a reference location.
- *
- * @param restaurants
- * @param referenceLocation
- * @param distanceThreshold
- */
-export const filterRestaurantsByDistance = (
-  restaurants: Restaurant[],
-  referenceLocation: GeoLocation,
-  distanceThreshold: number = DEFAULT_DISTANCE
-) =>
-  restaurants.filter(
-    (restaurant) =>
-      getDistance(referenceLocation, restaurant) < distanceThreshold
-  );
 
 /**
  * This methods sorts the list of restaurants according to a given
@@ -81,4 +64,58 @@ const discoverySortCompareFn: DiscoverySortCompareFunctions = {
       ? getDistance(additionalParams.referenceLocation, a) -
         getDistance(additionalParams.referenceLocation, b)
       : 0,
+};
+
+/**
+ * FILTER FUNCTIONS
+ */
+
+/**
+ * Max number of elements that the list have to contain
+ */
+export const MAX_NUMBER_OF_RESTAURANTS = 10;
+
+/**
+ * Default distance (in meters) to use as a filter.
+ */
+export const MAX_DISTANCE = 1500;
+
+/**
+ * Function wrapper that prunes out the restaurants given the
+ * sorting criteria. It is important to point out that the maximum
+ * length of the filtered array is given by the constant.
+ *
+ * @param restaurants
+ * @param sortCriteria
+ */
+export const filterRestaurants = (
+  restaurants: Restaurant[],
+  referenceLocation: GeoLocation,
+  sortCriteria: DiscoverySortingCriteria
+) =>
+  restaurants
+    .filter((restaurant) =>
+      restaurantsPruneFunction[sortCriteria](restaurant, { referenceLocation })
+    )
+    .slice(0, MAX_NUMBER_OF_RESTAURANTS);
+
+/**
+ * External filtering function using for filtering by location.
+ *
+ * @param restaurant
+ * @param params
+ */
+const filterByDistance: RestaurantsFilterFunction = (restaurant, params) =>
+  params
+    ? getDistance(params.referenceLocation, restaurant) < MAX_DISTANCE
+    : false;
+
+/**
+ * Dictionary that will contain all the filtering function based on the
+ * sorting criteria.
+ */
+export const restaurantsPruneFunction: RestaurantsFilterFunctions = {
+  location: filterByDistance,
+  popularity: () => false,
+  date: () => false,
 };

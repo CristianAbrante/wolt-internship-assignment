@@ -25,7 +25,7 @@ export interface GeoLocation {
 export type DiscoverySortingCriteria = "popularity" | "date" | "location";
 
 /**
- * This is the type of the sorting function.
+ * Type of the sorting function.
  */
 export type RestaurantSortCompareFn = (
   a: Restaurant,
@@ -34,10 +34,27 @@ export type RestaurantSortCompareFn = (
 ) => number;
 
 /**
- * This method will define the sorting functions
- * that could be used.
+ * Type used for define the different functions
+ * that could be used as a sort compare function.
  */
 export type DiscoverySortCompareFunctions = Record<
   DiscoverySortingCriteria,
   RestaurantSortCompareFn
+>;
+
+/**
+ * Type of the prune function
+ */
+export type RestaurantsFilterFunction = (
+  restaurant: Restaurant,
+  additionalParams?: { referenceLocation: GeoLocation }
+) => boolean;
+
+/**
+ * Dictionary type fot the possible prune functions given
+ * the sorting criteria.
+ */
+export type RestaurantsFilterFunctions = Record<
+  DiscoverySortingCriteria,
+  RestaurantsFilterFunction
 >;
