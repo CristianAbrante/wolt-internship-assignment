@@ -1,6 +1,14 @@
 import "jest";
 import { filterRestaurants } from "../utils";
 import {
+  dateFilteredMock1,
+  dateFilteredMock2,
+  dateFilterMock1,
+  dateFilterMock2,
+  dateFilterRLMock1,
+  dateFilterRLMock2,
+} from "./data/date-filter.test.mock";
+import {
   restaurantsMock1,
   closeRestaurantsMock1,
   referenceLocationMock1,
@@ -95,5 +103,33 @@ describe("POPULARITY - Filter test", () => {
     );
 
     expect(restaurants.map((r) => r.name)).toMatchObject(closeRestaurantsMock3);
+  });
+});
+
+describe("DATE - Filter test", () => {
+  test("Filter empty array", () => {
+    const restaurants = filterRestaurants([], referenceLocationMock1, "date");
+
+    expect(restaurants).toMatchObject([]);
+  });
+
+  test("Mock restaurants 1", () => {
+    const restaurants = filterRestaurants(
+      dateFilterMock1,
+      dateFilterRLMock1,
+      "date"
+    );
+
+    expect(restaurants.map((r) => r.name)).toMatchObject(dateFilteredMock1);
+  });
+
+  test("Mock restaurants 2", () => {
+    const restaurants = filterRestaurants(
+      dateFilterMock2,
+      dateFilterRLMock2,
+      "date"
+    );
+
+    expect(restaurants.map((r) => r.name)).toMatchObject(dateFilteredMock2);
   });
 });

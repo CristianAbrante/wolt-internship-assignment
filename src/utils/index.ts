@@ -81,6 +81,11 @@ export const MAX_NUMBER_OF_RESTAURANTS = 10;
 export const MAX_DISTANCE = 1500;
 
 /**
+ * Maximum number of months between current time and opening time.
+ */
+export const MAX_NUMBER_OF_MONTHS = 4;
+
+/**
  * Function wrapper that prunes out the restaurants given the
  * sorting criteria. It is important to point out that the maximum
  * length of the filtered array is given by the constant.
@@ -116,6 +121,23 @@ const filterByDistance: RestaurantsFilterFunction = (restaurant, params) =>
  */
 export const restaurantsPruneFunction: RestaurantsFilterFunctions = {
   location: filterByDistance,
-  popularity: () => false,
-  date: () => false,
+  popularity: filterByDistance,
+  date: (restaurant, params) => {
+    let locationFilter = filterByDistance(restaurant, params);
+    // in case the restaurant is not filtered by location
+    // it is going to be filtered by date.
+    if (locationFilter) {
+      const currentTime = new Date();
+      const restaurantDate = new Date(restaurant.launch_date);
+
+      const yearsDiff =
+        currentTime.getFullYear() - restaurantDate.getFullYear();
+      const monthsDiff =
+        12 * yearsDiff + (currentTime.getMonth() - restaurantDate.getMonth());
+      return monthsDiff < MAX_NUMBER_OF_MONTHS;
+    } else {
+      // not filtered by location.
+      return false;
+    }
+  },
 };
