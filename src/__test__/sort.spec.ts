@@ -7,6 +7,10 @@ import {
   popularitySortedMock2,
   popularityMock3,
   popularitySortedMock3,
+  popularityMock4,
+  popularitySortedMock4,
+  popularityMock5,
+  popularitySortedMock5,
 } from "./data/popularity-sort.test.mock";
 
 describe("Sort functions tests - popularity", () => {
@@ -46,5 +50,27 @@ describe("Sort functions tests - popularity", () => {
     expect(
       restaurants.map((restaurant) => restaurant.popularity)
     ).toMatchObject(popularitySortedMock3);
+  });
+
+  test("Popularity sort mock 4", () => {
+    const restaurants = sortRestaurants(
+      popularityMock4,
+      { lat: 0, lon: 0 },
+      "popularity"
+    );
+    expect(
+      restaurants.map((restaurant) => restaurant.popularity)
+    ).toMatchObject(popularitySortedMock4);
+  });
+
+  test("Popularity sort mock 5", () => {
+    const restaurants = sortRestaurants(
+      popularityMock5,
+      { lat: 0, lon: 0 },
+      "popularity"
+    );
+    expect(
+      restaurants.map((restaurant) => restaurant.popularity)
+    ).toMatchObject(popularitySortedMock5);
   });
 });

@@ -61,5 +61,18 @@ export const sortRestaurants = (
  * available.
  */
 const restaurantsSortFunctions: RestaurantsSortFunctions = {
-  popularity: (_) => (a, b) => b.popularity - a.popularity,
+  online: (_) => (a, b) => {
+    // in case a is online and b is not then a should be first
+    if (a.online && !b.online) return -1;
+    // in case b is online and be is not then b should be first
+    if (b.online && !a.online) return +1;
+    // in case both are open or none of them, then they are equal.
+    return 0;
+  },
+  popularity: (_) => (a, b) => {
+    const onlineSort = restaurantsSortFunctions["online"](_)(a, b);
+    // if according to online they are equal then they are sorted
+    // based on popularity.
+    return onlineSort === 0 ? b.popularity - a.popularity : onlineSort;
+  },
 };
