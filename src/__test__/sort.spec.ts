@@ -26,7 +26,7 @@ import {
   popularitySortedMock5,
 } from "./data/popularity-sort.test.mock";
 
-describe("Sort functions tests - popularity", () => {
+describe("POPULARITY - Sort test", () => {
   test("Popularity sort empty array", () => {
     const restaurants = sortRestaurants([], { lat: 0, lon: 0 }, "popularity");
     expect(restaurants).toEqual([]);
@@ -88,7 +88,7 @@ describe("Sort functions tests - popularity", () => {
   });
 });
 
-describe("Sort functions tests - date", () => {
+describe("DATE - Sort test", () => {
   test("Date sort empty array", () => {
     const restaurants = sortRestaurants([], { lat: 0, lon: 0 }, "date");
     expect(restaurants).toEqual([]);
@@ -116,7 +116,7 @@ describe("Sort functions tests - date", () => {
   });
 });
 
-describe("Sort functions tests - location", () => {
+describe("LOCATION - Sort test", () => {
   test("Location sort empty array", () => {
     const restaurants = sortRestaurants([], referenceLocationMock1, "date");
     expect(restaurants).toEqual([]);
