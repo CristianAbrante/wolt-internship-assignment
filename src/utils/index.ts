@@ -5,6 +5,8 @@ import {
   DiscoverySortCompareFunctions,
   RestaurantsFilterFunctions,
   RestaurantsFilterFunction,
+  DiscoveryTitles,
+  Discovery,
 } from "../types";
 const geolib = require("geolib");
 
@@ -114,7 +116,7 @@ export const filterRestaurants = (
 ) =>
   restaurants
     .filter((restaurant) =>
-      restaurantsPruneFunction[sortCriteria](restaurant, { referenceLocation })
+      restaurantsFilterFunction[sortCriteria](restaurant, { referenceLocation })
     )
     .slice(0, MAX_NUMBER_OF_RESTAURANTS);
 
@@ -133,7 +135,7 @@ const filterByDistance: RestaurantsFilterFunction = (restaurant, params) =>
  * Dictionary that will contain all the filtering function based on the
  * sorting criteria.
  */
-export const restaurantsPruneFunction: RestaurantsFilterFunctions = {
+export const restaurantsFilterFunction: RestaurantsFilterFunctions = {
   location: filterByDistance,
   popularity: filterByDistance,
   // in case the restaurant is not filtered by location
@@ -142,4 +144,56 @@ export const restaurantsPruneFunction: RestaurantsFilterFunctions = {
     filterByDistance(restaurant, params)
       ? getMonthsSinceLaunch(restaurant) < MAX_NUMBER_OF_MONTHS
       : false,
+};
+
+/**
+ * DISCOVERY FUNCTIONS
+ */
+
+/**
+ * Dictionary that contains the
+ * discovery section titles
+ */
+export const discoveryTitles: DiscoveryTitles = {
+  popularity: "Popular restaurants",
+  date: "New Restaurants",
+  location: "Nearby Restaurants",
+};
+
+/**
+ * Method used for returning the discovery section
+ * given the restaurants list and the given location.
+ *
+ * @param restaurants
+ * @param location
+ */
+export const getDiscovery = (
+  restaurants: Restaurant[],
+  location: GeoLocation
+): Discovery => {
+  let discovery: Discovery = {
+    sections: [],
+  };
+
+  // iterating over the possible discovery sections
+  for (let criteriaStr in discoveryTitles) {
+    const criteria = criteriaStr as DiscoverySortingCriteria;
+    const sortedRestaurants = sortRestaurants(restaurants, location, criteria);
+    const filteredRestaurants = filterRestaurants(
+      sortedRestaurants,
+      location,
+      criteria
+    );
+
+    // only section is added if the length is
+    // greater than zero.
+    if (filteredRestaurants.length > 0) {
+      discovery.sections.push({
+        title: discoveryTitles[criteria],
+        restaurants: filteredRestaurants,
+      });
+    }
+  }
+
+  return discovery;
 };

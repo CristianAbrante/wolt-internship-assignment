@@ -1,8 +1,18 @@
 import express, { response } from "express";
-import { GeoLocation } from "./types";
+import fs from "fs";
+import { GeoLocation, Restaurant } from "./types";
 const app = express();
 
-app.get<{ name: string }, string, {}, GeoLocation>("/", (req, res) => {
+app.get<{ name: string }, string, {}, GeoLocation>("/discovery", (req, res) => {
+  fs.readFile("./data/restaurants.json", (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    let restaurants: Restaurant = JSON.parse(data.toString());
+    console.log(restaurants);
+  });
+
   res.send("Hello from node and typescript.");
 });
 

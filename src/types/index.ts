@@ -58,3 +58,17 @@ export type RestaurantsFilterFunctions = Record<
   DiscoverySortingCriteria,
   RestaurantsFilterFunction
 >;
+
+/**
+ * Type used for defining all the possible discovery titles.
+ * This is necessary because if a new criteria is added,
+ * TS will throw a compile error.
+ */
+export type DiscoveryTitles = Record<DiscoverySortingCriteria, string>;
+
+/**
+ * Discovery section type.
+ */
+export type Discovery = {
+  sections: { title: string; restaurants: Restaurant[] }[];
+};
