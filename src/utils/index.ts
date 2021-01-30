@@ -85,4 +85,12 @@ const restaurantsSortFunctions: RestaurantsSortFunctions = {
       ? new Date(b.launch_date).getTime() - new Date(a.launch_date).getTime()
       : onlineSort;
   },
+  location: (location) => (a, b) => {
+    const onlineSort = restaurantsSortFunctions["online"](location)(a, b);
+    // if according to online they are equal then they are sorted
+    // based on location.
+    return onlineSort === 0
+      ? getDistance(location, a) - getDistance(location, b)
+      : onlineSort;
+  },
 };

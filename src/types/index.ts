@@ -22,7 +22,11 @@ export interface GeoLocation {
  * This key represents all the possible sorting criteria
  * that could be used to sort restaurants.
  */
-export type RestaurantSortingType = "online" | "popularity" | "date";
+export type RestaurantSortingType =
+  | "online"
+  | "popularity"
+  | "date"
+  | "location";
 
 /**
  * This is the type of the sorting function.

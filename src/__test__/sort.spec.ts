@@ -9,6 +9,11 @@ import {
   dateSortedMock3,
 } from "./data/date-sort.test.mock";
 import {
+  locationSortedMock1,
+  locationSortMock1,
+  referenceLocationMock1,
+} from "./data/location-sort.test.mock";
+import {
   popularityMock1,
   popularitySortedMock1,
   popularityMock2,
@@ -108,5 +113,23 @@ describe("Sort functions tests - date", () => {
     expect(
       restaurants.map((restaurant) => restaurant.launch_date)
     ).toMatchObject(dateSortedMock3);
+  });
+});
+
+describe("Sort functions tests - location", () => {
+  test("Location sort empty array", () => {
+    const restaurants = sortRestaurants([], referenceLocationMock1, "date");
+    expect(restaurants).toEqual([]);
+  });
+
+  test("Date sort mock 1", () => {
+    const restaurants = sortRestaurants(
+      locationSortMock1,
+      referenceLocationMock1,
+      "location"
+    );
+    expect(restaurants.map((restaurant) => restaurant.name)).toMatchObject(
+      locationSortedMock1
+    );
   });
 });
