@@ -75,4 +75,12 @@ const restaurantsSortFunctions: RestaurantsSortFunctions = {
     // based on popularity.
     return onlineSort === 0 ? b.popularity - a.popularity : onlineSort;
   },
+  date: (_) => (a, b) => {
+    const onlineSort = restaurantsSortFunctions["online"](_)(a, b);
+    // if according to online they are equal then they are sorted
+    // based on date.
+    return onlineSort === 0
+      ? new Date(b.launch_date).getTime() - new Date(a.launch_date).getTime()
+      : onlineSort;
+  },
 };
