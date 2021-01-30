@@ -21,6 +21,20 @@ export const getDistance = (location: GeoLocation, restaurant: Restaurant) =>
   );
 
 /**
+ * Auxiliary function for computing the months since restaurant
+ * was launched.
+ *
+ * @param restaurant
+ */
+export const getMonthsSinceLaunch = (restaurant: Restaurant) => {
+  const currentDate = new Date();
+  const launchDate = new Date(restaurant.launch_date);
+
+  const yearsDiff = currentDate.getFullYear() - launchDate.getFullYear();
+  return 12 * yearsDiff + (currentDate.getMonth() - launchDate.getMonth());
+};
+
+/**
  * SORT FUNCTIONS
  */
 
@@ -122,22 +136,10 @@ const filterByDistance: RestaurantsFilterFunction = (restaurant, params) =>
 export const restaurantsPruneFunction: RestaurantsFilterFunctions = {
   location: filterByDistance,
   popularity: filterByDistance,
-  date: (restaurant, params) => {
-    let locationFilter = filterByDistance(restaurant, params);
-    // in case the restaurant is not filtered by location
-    // it is going to be filtered by date.
-    if (locationFilter) {
-      const currentTime = new Date();
-      const restaurantDate = new Date(restaurant.launch_date);
-
-      const yearsDiff =
-        currentTime.getFullYear() - restaurantDate.getFullYear();
-      const monthsDiff =
-        12 * yearsDiff + (currentTime.getMonth() - restaurantDate.getMonth());
-      return monthsDiff < MAX_NUMBER_OF_MONTHS;
-    } else {
-      // not filtered by location.
-      return false;
-    }
-  },
+  // in case the restaurant is not filtered by location
+  // it is going to be filtered by date.
+  date: (restaurant, params) =>
+    filterByDistance(restaurant, params)
+      ? getMonthsSinceLaunch(restaurant) < MAX_NUMBER_OF_MONTHS
+      : false,
 };
