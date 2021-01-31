@@ -7,8 +7,7 @@ import {
 import { Discovery, GeoLocation } from "./types";
 import { getDiscovery } from "./utils";
 
-// App is exported in order to be used with supertest.
-export const app = express();
+const app = express();
 
 app.get<{}, Discovery, {}, GeoLocation>("/discovery", (req, res) => {
   fs.readFile("./data/restaurants.json", (err, data) => {
@@ -39,6 +38,4 @@ app.get<{}, Discovery, {}, GeoLocation>("/discovery", (req, res) => {
   });
 });
 
-// TODO: Change this to other file
-// const port = process.env.PORT || 3000;
-// app.listen(port, () => console.log(`Server listening on port ${port}`));
+export default app;

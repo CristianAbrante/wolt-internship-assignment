@@ -7,9 +7,9 @@
   "author": "Cristian Abrante <cristian@abrante.me>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --config nodemon.json src/app.ts",
+    "dev": "nodemon --config nodemon.json src/index.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start": "yarn build; node dist/index.js",
     "test": "jest --config jest.config.js"
   },
   "devDependencies": {

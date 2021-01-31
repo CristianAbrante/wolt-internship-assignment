@@ -1,6 +1,6 @@
 import "jest";
 import request from "supertest";
-import { app } from "../app";
+import app from "../app";
 import {
   discoveryMock1,
   discoveryMock2,
