@@ -176,7 +176,7 @@ export const getDiscovery = (
   };
 
   // iterating over the possible discovery sections
-  for (let criteriaStr in discoveryTitles) {
+  Object.keys(discoveryTitles).forEach((criteriaStr) => {
     const criteria = criteriaStr as DiscoverySortingCriteria;
     const sortedRestaurants = sortRestaurants(restaurants, location, criteria);
     const filteredRestaurants = filterRestaurants(
@@ -193,7 +193,7 @@ export const getDiscovery = (
         restaurants: filteredRestaurants,
       });
     }
-  }
+  });
 
   return discovery;
 };

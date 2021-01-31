@@ -15,7 +15,9 @@
 
 ## 🏗 Installation
 
-For installing the dependencies it is needed to use [yarn](https://yarnpkg.com/), in case you do not have yarn installed, you can check the [installation page](https://classic.yarnpkg.com/en/docs/install/#mac-stable).
+The project is intended to run over **node.js**, and it was developed using the version `v15.5.1`.
+
+For installing the dependencies it is needed to use [yarn](https://yarnpkg.com/), in case you do not have yarn installed, you can check the [installation page](https://classic.yarnpkg.com/en/docs/install/#mac-stable), the version used for development is `1.22.10`
 
 Once, yarn is installed simply open a terminal in the base folder of the project and type:
 
